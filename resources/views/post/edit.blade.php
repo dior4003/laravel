@@ -51,6 +51,32 @@
                             @enderror
                         </div>
                         <div class="control-group">
+                            <select class="form-control " name="category">
+                                <label for="category"></label>
+                                <option disabled selected>Not Selected</option>
+
+                                @foreach ($category as $item)
+                                    <option value="{{ $item->id }}"
+                                        {{ $post->category->id == $item->id ? 'selected' : '' }}>{{ $item->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('category')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <input type="hidden" name="user_id" value="1">
+                        <div class="control-group my-2">
+                            <select id="multipleselect" class="form-control " placeholder="Select tags" multiple
+                                name="tags[]">
+                                @foreach ($tags as $item)
+                                    <option value="{{ $item->id }}"
+                                        {{ $post->tags->contains($item) ? 'selected' : '' }}>
+                                        {{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="control-group">
                             <input type="file" style="display: none" value="{{ $post->photo }}" id="photo"
                                 name="photo" />
                             <label class="form-control p-4 d-flex align-items-center justify-content-center"

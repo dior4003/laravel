@@ -17,5 +17,13 @@ class Post extends Model
     {
         return $this->belongsTo(User::class);
     }
-    protected $fillable = ["user_id","title", "short_content", "content", "photo"];
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+    protected $fillable = ["user_id", "category_id", "title", "short_content", "content", "photo"];
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostCOntroller;
@@ -39,4 +40,8 @@ Route::get('/login',[PageController::class, 'login'])->name("login");
 
 
 
-Route::resource("post" ,PostCOntroller::class );
+// Route::resource("post" ,PostCOntroller::class );
+Route::resources([
+    "post" => PostCOntroller::class,
+    "comments"=>CommentController::class,
+]);

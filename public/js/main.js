@@ -18,7 +18,12 @@
         $(window).resize(toggleNavbarMethod);
     });
     
-    
+    $(document).ready(function() {
+        var multipleSelectButton = new Choices('#multipleselect', {
+            removeItemButton: true,
+            maxItemCount: 5,
+        });
+    });
     // Back to top button
     $(window).scroll(function () {
         if ($(this).scrollTop() > 100) {

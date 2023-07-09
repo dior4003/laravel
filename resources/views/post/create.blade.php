@@ -41,13 +41,39 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="control-group">
+                        <input type="hidden" name="user_id" value="1">
+
+                        <div class="control-group my-2">
                             <textarea class="form-control p-4" rows="6" placeholder="Content" name="content">{{ old('title') }}</textarea>
                             @error('content')
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="control-group">
+                            <select class="form-control " name="category">
+                                <label for="category"></label>
+                                <option disabled selected>Not Selected</option>
+                                @foreach ($category as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+
+                            </select>
+                            @error('category')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="control-group my-2">
+                            <select id="multipleselect" class="form-control " placeholder="Select tags" multiple
+                                name="tag[]">
+                                @foreach ($tags as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+
+                            </select>
+
+                        </div>
+
+                        <div class="control-group my-2">
                             <input type="file" style="display: none" value="{{ old('photo') }}" id="photo"
                                 name="photo" />
                             <label class="form-control p-4 d-flex align-items-center justify-content-center"
@@ -70,7 +96,8 @@
             </div>
             <div class="col-lg-6 mb-5 mb-lg-0">
                 <div class="img_div " style="width: 100%;display:flex;justify-content:center">
-                    <img id="blah" src="#" alt="your image" style="width: 80%; object-fit:cover" class="img-fluid rounded w-75 mb-4"/>
+                    <img id="blah" src="#" alt="your image" style="width: 80%; object-fit:cover"
+                        class="img-fluid rounded w-75 mb-4" />
                 </div>
             </div>
 

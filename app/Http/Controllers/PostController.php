@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,7 +16,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $post = Post::paginate(3);
+        $post = Post::paginate(6);
         // dd($post);
         return view("post.index")->with("posts", $post);
     }
@@ -24,7 +26,10 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view("post.create");
+        return view("post.create")->with([
+            "category" => Category::all(),
+            "tags" => Tag::all()
+        ]);
     }
 
     /**
@@ -32,14 +37,26 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        $path = $request->file('photo')->store('post-photo');
+        // dd($request);
 
+
+        if ($request->hasFile("photo")) {
+            $path = $request->file('photo')->store('post-photo');
+        }
         $newPost = Post::create([
+            "user_id" => 1,
             "title" => $request->title,
+            "category_id" => $request->category,
             "short_content" => $request->short_content,
             "content" => $request->content,
-            "photo" => $path
+            "photo" => $path ?? null
         ]);
+        if (isset($request->tag)) {
+            // dd($request);
+            foreach ($request->tag as $tag) {
+                $newPost->tags()->attach($tag);
+            }
+        }
         return redirect()->route("post.index");
     }
 
@@ -55,7 +72,8 @@ class PostController extends Controller
         return view("post.show")->with(
             [
                 "post" => $post,
-                "resent_post" => Post::latest()->get()->except($post->id)->take(3)
+                "resent_post" => Post::latest()->get()->except($post->id)->take(3),
+                "category" => Category::all()
             ]
         );
     }
@@ -65,7 +83,12 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        return view("post.edit")->with("post", $post);
+        return view("post.edit")->with([
+            "post" => $post,
+            "category" => Category::all(),
+            "tags" => Tag::all()
+
+        ]);
     }
 
     /**
@@ -80,11 +103,22 @@ class PostController extends Controller
             $path = $request->file('photo')->store('post-photo');
         }
         $post->update([
+            "user_id" => 1,
             "title" => $request->title,
+            "category_id" => $request->category,
             "short_content" => $request->short_content,
             "content" => $request->content,
             "photo" => $path ?? $post->photo,
         ]);
+
+        if (isset($request->tags)) {
+
+            // dd($request->tags);
+            $post->tags()->sync($request->tags);
+            // foreach ($request->tags_id as $tag) {
+
+            // }
+        }
         return redirect()->route("post.show", ["post" => $post->id]);
     }
 
